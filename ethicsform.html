@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UvA Thesis Data Type Questionnaire</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #ffffff;
+      color: #1B1918;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .uva-bar {
+      height: 6px;
+      background: #bc0031;
+      border-radius: 2px;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #bc0031;
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      font-size: 0.88rem;
+      color: #A8A29F;
+      margin-bottom: 32px;
+      font-family: Arial, sans-serif;
+    }
+
+    .question-block {
+      margin-bottom: 28px;
+      padding: 20px 24px;
+      border-left: 4px solid #bc0031;
+      background: #fafafa;
+      border-radius: 0 4px 4px 0;
+      transition: opacity 0.3s;
+    }
+
+    .question-block.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .question-label {
+      font-size: 0.95rem;
+      font-family: Arial, sans-serif;
+      color: #1B1918;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .q-number {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bc0031;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-yn {
+      flex: 1;
+      padding: 10px 0;
+      border: 2px solid #A8A29F;
+      background: #fff;
+      color: #1B1918;
+      font-family: Arial, sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+
+    .btn-yn:hover {
+      border-color: #bc0031;
+      color: #bc0031;
+    }
+
+    .btn-yn.selected-yes {
+      background: #bc0031;
+      border-color: #bc0031;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .btn-yn.selected-no {
+      background: #1B1918;
+      border-color: #1B1918;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .result-box {
+      display: none;
+      margin-top: 8px;
+      padding: 24px;
+      border: 2px solid #bc0031;
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .result-box.visible {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bc0031;
+      font-family: Arial, sans-serif;
+      margin-bottom: 8px;
+    }
+
+    .result-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #1B1918;
+      margin-bottom: 8px;
+    }
+
+    .result-desc {
+      font-size: 0.88rem;
+      font-family: Arial, sans-serif;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      background: #bc0031;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-family: Arial, sans-serif;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .btn-download:hover {
+      background: #96002a;
+    }
+
+    .btn-download svg {
+      width: 16px; height: 16px; fill: #fff;
+    }
+
+    .reset-link {
+      display: block;
+      margin-top: 16px;
+      font-size: 0.82rem;
+      font-family: Arial, sans-serif;
+      color: #A8A29F;
+      cursor: pointer;
+      text-decoration: underline;
+      width: fit-content;
+    }
+
+    .reset-link:hover { color: #bc0031; }
+
+    .uva-footer {
+      margin-top: 36px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e5e5;
+      font-size: 0.78rem;
+      font-family: Arial, sans-serif;
+      color: #A8A29F;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="uva-bar"></div>
+  <h1>Retrieving your ethical review form</h1>
+  <p class="subtitle">Universiteit van Amsterdam &mdash; Answer both questions and download the resulting questionnaire</p>
+
+  <!-- Q1 -->
+  <div class="question-block" id="block1">
+    <div class="question-label">
+      <span class="q-number">Question 1</span>
+      Will you use <strong>primary empirical data</strong> &mdash; (will you collect new data yourself)?
+    </div>
+    <div class="btn-group">
+      <button class="btn-yn" id="q1-yes" onclick="answer(1, true)">Yes</button>
+      <button class="btn-yn" id="q1-no"  onclick="answer(1, false)">No</button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-block disabled" id="block2">
+    <div class="question-label">
+      <span class="q-number">Question 2</span>
+      Will you use <strong>secondary empirical data</strong> (reusing data already recorded by others &mdash; e.g. existing databases, policy documents, media statements by public figures) or write a <strong>non-empirical thesis</strong> (theoretical thesis or project using simulated data)?
+    </div>
+    <div class="btn-group">
+      <button class="btn-yn" id="q2-yes" onclick="answer(2, true)">Yes</button>
+      <button class="btn-yn" id="q2-no"  onclick="answer(2, false)">No</button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-box" id="result-box">
+    <div class="result-title">Questionnaire</div>
+    <div class="result-name" id="result-name"></div>
+    <div class="result-desc" id="result-desc"></div>
+    <a class="btn-download" id="result-link" href="#" download>
+      <svg viewBox="0 0 24 24"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/></svg>
+      Download PDF
+    </a>
+    <span class="reset-link" onclick="reset()">&#8635; Start over</span>
+  </div>
+
+  <div class="uva-footer">Universiteit van Amsterdam &bull; For questions, contact your thesis supervisor</div>
+</div>
+
+<script>
+  // ── Configuration ─────────────────────────────────────────────
+  // Replace the pdf values with your actual PDF file paths or URLs
+  const outcomes = {
+    "yes-yes": {
+      name: "Form A \u2013 Primary & Secondary / Non-Empirical Data",
+      desc: "You will both collect new data yourself and use existing or non-empirical data. Please fill in Form A and hand it in on Canvas",
+      pdf: "form-a-primary-and-secondary.pdf"
+    },
+    "yes-no": {
+      name: "Form B \u2013 Primary Empirical Data Only",
+      desc: "You will collect new data yourself and will not rely on secondary or non-empirical sources. Please fill in Form B and hand it in on Canvas",
+      pdf: "form-b-primary-only.pdf"
+    },
+    "no-yes": {
+      name: "Form C \u2013 Secondary / Non-Empirical Data",
+      desc: "You will use existing data or write a non-empirical thesis. Please fill in Form C and hand it in on Canvas",
+      pdf: "form-c-secondary-nonempirical.pdf"
+    },
+    "no-no": {
+      name: "Form D \u2013 No Empirical Data",
+      desc: "You indicated you will not use primary or secondary empirical data. Please fill in Form D and hand it in on Canvas",
+      pdf: "form-d-no-data.pdf"
+    }
+  };
+  // ─────────────────────────────────────────────────────────────
+
+  var q1 = null, q2 = null;
+
+  function answer(q, val) {
+    if (q === 1) {
+      q1 = val;
+      q2 = null;
+      document.getElementById('q1-yes').className = 'btn-yn' + (val ? ' selected-yes' : '');
+      document.getElementById('q1-no').className  = 'btn-yn' + (!val ? ' selected-no' : '');
+      document.getElementById('q2-yes').className = 'btn-yn';
+      document.getElementById('q2-no').className  = 'btn-yn';
+      document.getElementById('block2').classList.remove('disabled');
+      document.getElementById('result-box').classList.remove('visible');
+    } else {
+      q2 = val;
+      document.getElementById('q2-yes').className = 'btn-yn' + (val ? ' selected-yes' : '');
+      document.getElementById('q2-no').className  = 'btn-yn' + (!val ? ' selected-no' : '');;
+      showResult();
+    }
+  }
+
+  function showResult() {
+    var key = (q1 ? 'yes' : 'no') + '-' + (q2 ? 'yes' : 'no');
+    var o = outcomes[key];
+    document.getElementById('result-name').textContent = o.name;
+    document.getElementById('result-desc').textContent = o.desc;
+    document.getElementById('result-link').href = o.pdf;
+    document.getElementById('result-link').setAttribute('download', o.pdf);
+    var box = document.getElementById('result-box');
+    box.classList.remove('visible');
+    void box.offsetWidth;
+    box.classList.add('visible');
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function reset() {
+    q1 = null; q2 = null;
+    ['q1-yes','q1-no','q2-yes','q2-no'].forEach(function(id) {
+      document.getElementById(id).className = 'btn-yn';
+    });
+    document.getElementById('block2').classList.add('disabled');
+    document.getElementById('result-box').classList.remove('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
