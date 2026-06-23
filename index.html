@@ -299,6 +299,7 @@
       document.getElementById('q2-no').className  = 'btn-yn';
       document.getElementById('block2').classList.remove('disabled');
       document.getElementById('result-box').classList.remove('visible');
+      document.getElementById('block2').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } else {
       q2 = val;
       document.getElementById('q2-yes').className = 'btn-yn' + (val ? ' selected-yes' : '');
