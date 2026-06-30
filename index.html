@@ -314,7 +314,7 @@
     document.getElementById('result-name').textContent = o.name;
     document.getElementById('result-desc').textContent = o.desc;
     document.getElementById('result-link').href = o.pdf;
-    document.getElementById('result-link').setAttribute('download', o.pdf);
+    document.getElementById('result-link').setAttribute('download', o.pdf.split('/').pop());
     var box = document.getElementById('result-box');
     box.classList.remove('visible');
     void box.offsetWidth;
